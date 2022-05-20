@@ -6,7 +6,6 @@ public class Main {
 
     private static final String FULL_OF_ENERGY = "Full of energy";
     private static final String PAYS = "Pays";
-    private static final String GETS = "Gets";
 
     public static void main(String[] args) throws IOException {
         BufferedReader buf = new BufferedReader(new InputStreamReader(System.in));
@@ -19,7 +18,7 @@ public class Main {
         // List of edges (to later be iterated)
         Digraph transitions = new Digraph();
 
-        // variables to save memory (instead of initializing vars in every iteration of
+        // variables to save memory (instead of initialising vars in every iteration of
         // the for loop)
         int challenge1, challenge2;
         int cost;
@@ -41,8 +40,12 @@ public class Main {
         int finalChallenge = Integer.parseInt(line[1]);
         int initialEnergy = Integer.parseInt(line[2]);
 
-        System.out.println(calc(transitions, initialChallenge, finalChallenge, initialEnergy, nChallenges));
+        Integer[] res = calc(transitions, initialChallenge, finalChallenge, initialEnergy, nChallenges);
 
+        if (res[0] == 0)
+            System.out.println(res[1]);
+        else
+            System.out.println(FULL_OF_ENERGY);
     }
 
     private static Integer[] calc(Digraph digraph, int initialChallenge, int finalChallenge, int initialEnergy,
@@ -53,6 +56,7 @@ public class Main {
         // and in each position of the array indicates the "max" amount of points the
         // warrior has at that stage/challenge
         Integer[] points = new Integer[nChallenges];
+        points[initialChallenge] = initialEnergy;
 
         boolean changes = false;
 
@@ -63,7 +67,8 @@ public class Main {
         }
 
         if (points[finalChallenge] > initialEnergy)
-            return new Integer[] { (Integer) 1, points[finalChallenge] };
+            return new Integer[] { 1, points[finalChallenge] };
+
         return new Integer[] { 0, points[finalChallenge] };
     }
 
@@ -78,7 +83,7 @@ public class Main {
             int secondNode = e.getChallenge2();
             if (points[firstNode] != null) {
                 int newLen = points[firstNode] + e.getEnergyPoints();
-                if (newLen > points[secondNode]) {
+                if (points[secondNode] == null || newLen > points[secondNode]) {
                     points[secondNode] = newLen;
                     changes = true;
                 }
