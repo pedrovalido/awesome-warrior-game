@@ -2,13 +2,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class Main{
-    
+public class Main {
+
     private static final String FULL_OF_ENERGY = "Full of energy";
     private static final String PAYS = "Pays";
     private static final String GETS = "Gets";
 
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
         BufferedReader buf = new BufferedReader(new InputStreamReader(System.in));
 
         String[] line = new String[4];
@@ -16,28 +16,75 @@ public class Main{
         int nChallenges = Integer.parseInt(line[0]);
         int nDecisions = Integer.parseInt(line[1]);
 
-        //matrix of energy points in transitions
-        int[][] transitions = new int[nChallenges][nChallenges];
+        // List of edges (to later be iterated)
+        Digraph transitions = new Digraph();
 
-        //variables to save memory (instead of initializing vars in every iteration of the for loop)
+        // variables to save memory (instead of initializing vars in every iteration of
+        // the for loop)
         int challenge1, challenge2;
         int cost;
         int aux;
 
-        for(int i=0;i<nDecisions;i++){
+        for (int i = 0; i < nDecisions; i++) {
             line = buf.readLine().split(" ");
             challenge1 = Integer.parseInt(line[0]);
             challenge2 = Integer.parseInt(line[3]);
             aux = Integer.parseInt(line[2]);
-            cost = line[1].equals(PAYS) ? aux - (aux*2) : aux;
-            transitions[challenge1][challenge2] = cost;
+            cost = line[1].equals(PAYS) ? -aux : aux;
+
+            transitions.addNode(new Node(new Edge(challenge1, challenge2, cost), null, null));
         }
 
+        line = buf.readLine().split(" ");
 
+        int initialChallenge = Integer.parseInt(line[0]);
+        int finalChallenge = Integer.parseInt(line[1]);
+        int initialEnergy = Integer.parseInt(line[2]);
+
+        System.out.println(calc(transitions, initialChallenge, finalChallenge, initialEnergy, nChallenges));
 
     }
 
-    private static void calc(int[][] transitions, int initialChallenge, int finalChallenge, int initialEnergy){
-        
+    private static Integer[] calc(Digraph digraph, int initialChallenge, int finalChallenge, int initialEnergy,
+            int nChallenges) {
+
+        // Integer wrapper class where null value simulates not being possible to travel
+        // to a certain challenge
+        // and in each position of the array indicates the "max" amount of points the
+        // warrior has at that stage/challenge
+        Integer[] points = new Integer[nChallenges];
+
+        boolean changes = false;
+
+        for (int i = 0; i <= nChallenges; i++) {
+            changes = updatePoints(digraph, points);
+            if (!changes)
+                break;
+        }
+
+        if (points[finalChallenge] > initialEnergy)
+            return new Integer[] { (Integer) 1, points[finalChallenge] };
+        return new Integer[] { 0, points[finalChallenge] };
+    }
+
+    private static boolean updatePoints(Digraph digraph, Integer[] points) {
+        boolean changes = false;
+
+        Node aux = digraph.getFirst();
+
+        while (aux.hasNext()) {
+            Edge e = aux.getEdge();
+            int firstNode = e.getChallenge1();
+            int secondNode = e.getChallenge2();
+            if (points[firstNode] != null) {
+                int newLen = points[firstNode] + e.getEnergyPoints();
+                if (newLen > points[secondNode]) {
+                    points[secondNode] = newLen;
+                    changes = true;
+                }
+            }
+            aux = aux.getNext();
+        }
+        return changes;
     }
 }
