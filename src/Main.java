@@ -66,8 +66,15 @@ public class Main {
                 break;
         }
 
+        int p = points[finalChallenge];
+
+        updatePoints(digraph, points);
+        boolean pp = points[finalChallenge] > p;
+        if (pp)
+            return new Integer[] { 1, null };
+
         if (points[finalChallenge] > initialEnergy)
-            return new Integer[] { 1, points[finalChallenge] };
+            return new Integer[] { 1, null };
 
         return new Integer[] { 0, points[finalChallenge] };
     }
