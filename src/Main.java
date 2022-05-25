@@ -52,9 +52,8 @@ public class Main {
             int nChallenges) {
 
         // Integer wrapper class where null value simulates not being possible to travel
-        // to a certain challenge
-        // and in each position of the array indicates the "max" amount of points the
-        // warrior has at that stage/challenge
+        // to a certain challenge and in each position of the array indicates the "max"
+        // amount of points the warrior has at that stage/challenge
         Integer[] points = new Integer[nChallenges];
         points[initialChallenge] = initialEnergy;
 
@@ -66,25 +65,24 @@ public class Main {
                 break;
         }
 
-        int p = points[finalChallenge];
-
+        int pointsFinalChallenge = points[finalChallenge];
         updatePoints(digraph, points);
-        boolean pp = points[finalChallenge] > p;
-        if (pp)
+        boolean positiveCycle = points[finalChallenge] > pointsFinalChallenge;
+
+        if (positiveCycle || points[finalChallenge] > initialEnergy)
             return new Integer[] { 1, null };
 
-        if (points[finalChallenge] > initialEnergy)
-            return new Integer[] { 1, null };
-
-        return new Integer[] { 0, points[finalChallenge] };
+        return new Integer[] { 0, points[finalChallenge] < 0 ? 0 : points[finalChallenge] };
     }
 
     private static boolean updatePoints(Digraph digraph, Integer[] points) {
+    	
         boolean changes = false;
 
-        Node aux = digraph.getFirst();
-
-        while (aux.hasNext()) {
+        Node aux = new Node(null,null, digraph.getFirst());
+        
+        do {
+        	aux = aux.getNext();
             Edge e = aux.getEdge();
             int firstNode = e.getChallenge1();
             int secondNode = e.getChallenge2();
@@ -95,8 +93,7 @@ public class Main {
                     changes = true;
                 }
             }
-            aux = aux.getNext();
-        }
+        }while (aux.hasNext());
         return changes;
     }
 }
