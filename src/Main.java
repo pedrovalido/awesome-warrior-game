@@ -7,6 +7,11 @@ public class Main {
     private static final String FULL_OF_ENERGY = "Full of energy";
     private static final String PAYS = "Pays";
 
+    /**
+     * 
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
         BufferedReader buf = new BufferedReader(new InputStreamReader(System.in));
 
@@ -48,6 +53,21 @@ public class Main {
             System.out.println(FULL_OF_ENERGY);
     }
 
+    /**
+     * Calculates the amount of points with which the wizzard reaches the final
+     * challenge
+     * 
+     * @param digraph          - list of all the edges
+     * @param initialChallenge - integer representing the initial challenge
+     * @param finalChallenge   - integer representing the final challenge
+     * @param initialEnergy    - integer representing the wizzard's inital energy
+     * @param nChallenges      - integer representing the total number of challenges
+     * @return (int, int) - the first integer represents wether or not the wizzard
+     *         can reach the final challenge with more energy than he started with
+     *         the second integer represents the maximum amount of points the
+     *         wizzard reaches the final challenge, in case it is less than what he
+     *         started with
+     */
     private static Integer[] calc(Digraph digraph, int initialChallenge, int finalChallenge, int initialEnergy,
             int nChallenges) {
 
@@ -75,14 +95,22 @@ public class Main {
         return new Integer[] { 0, points[finalChallenge] < 0 ? 0 : points[finalChallenge] };
     }
 
+    /**
+     * Iterates all the edges and changes the points array in case the wizzard can
+     * get more points
+     * 
+     * @param digraph - list of all the edges
+     * @param points - array with the amount of points the wizzard has at each challenge (index)
+     * @return a boolean changes representing wether or not changes were made to the points array
+     */
     private static boolean updatePoints(Digraph digraph, Integer[] points) {
-    	
+
         boolean changes = false;
 
-        Node aux = new Node(null,null, digraph.getFirst());
-        
+        Node aux = new Node(null, null, digraph.getFirst());
+
         do {
-        	aux = aux.getNext();
+            aux = aux.getNext();
             Edge e = aux.getEdge();
             int firstNode = e.getChallenge1();
             int secondNode = e.getChallenge2();
@@ -93,7 +121,7 @@ public class Main {
                     changes = true;
                 }
             }
-        }while (aux.hasNext());
+        } while (aux.hasNext());
         return changes;
     }
 }
