@@ -1,26 +1,28 @@
+package graph;
+
 public class Digraph {
 
     /**
      * class to be used just to iterate the graph's edge
-     * there's no need to implement the remove node method
+     * there's no need to implement the remove node method, insert middle, etc
      */
     public Node head;
     public Node tail;
 
     public int counter;
 
-    public Digraph(){
-       // counter=0;
+    public Digraph() {
+        // counter=0;
     }
 
-    public void addNode(Node node){
+    public void addNode(Node node) {
         counter++;
-        if(head==null && tail==null){
+        if (head == null && tail == null) {
             head = node;
             tail = node;
             return;
         }
-        if(counter==1){
+        if (counter == 1) {
             tail = node;
             head.setNext(node);
             tail.setPrevious(head);
@@ -31,12 +33,12 @@ public class Digraph {
         tail = node;
     }
 
-    public int getSize(){
+    public int getSize() {
         return counter;
     }
 
-    public Node getFirst(){
+    public Node getFirst() {
         return head;
     }
-    
+
 }

@@ -1,3 +1,5 @@
+package graph;
+
 public class Node {
     private Edge edge;
 
@@ -5,7 +7,7 @@ public class Node {
 
     private Node next;
 
-    public Node(){
+    public Node() {
 
     }
 
@@ -15,27 +17,27 @@ public class Node {
         this.next = next;
     }
 
-    public Edge getEdge(){
+    public Edge getEdge() {
         return edge;
     }
 
-    public Node getPrevious(){
+    public Node getPrevious() {
         return previous;
     }
 
-    public Node getNext(){
+    public Node getNext() {
         return next;
     }
 
-    public boolean hasNext(){
-        return next!= null;
+    public boolean hasNext() {
+        return next != null;
     }
 
-    public void setNext(Node node){
+    public void setNext(Node node) {
         this.next = node;
     }
 
-    public void setPrevious(Node node){
+    public void setPrevious(Node node) {
         this.previous = node;
     }
 }
